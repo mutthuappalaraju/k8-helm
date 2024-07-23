@@ -17,34 +17,38 @@ data:
   MYSQL_USER: ZXhwZW5zZQ==
   MYSQL_PASSWORD: RXhwZW5zZUFwcEAx
 ---
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: mysql
   namespace: expense
-  # these labels are deployment related labels
-  labels:
-    component: mysql
+  labels: 
+    app: mysql
     project: expense
     tier: db
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1
   selector:
-    matchLabels:
-      component: mysql
+    matchLabels: # these labels are used to find the pods
+      app: mysql
       project: expense
       tier: db
-  # pod definition
   template:
     metadata:
-      labels:
-        component: mysql
+      labels: # these labels are pod labels
+        app: mysql
         project: expense
         tier: db
     spec:
       containers:
       - name: mysql
-        image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
+        image: mutthu2512/mysql:e1
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: mysql
+        - secretRef:
+            name: mysql
 ---
 apiVersion: v1
 kind: Service
@@ -53,10 +57,10 @@ metadata:
   namespace: expense
 spec:
   selector:
-    component: mysql
+    app: mysql
     project: expense
     tier: db
   ports:
   - protocol: TCP
     port: 3306 #service-port
-    targetPort: 3306 #target-port
+    targetPort: 3306 #container-port
