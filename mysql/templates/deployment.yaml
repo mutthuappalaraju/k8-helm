@@ -25,11 +25,11 @@ spec:
       - name: mysql
         image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
         imagePullPolicy: Always
-        # envFrom:
-        # - configMapRef:
-        #     name: mysql
-        # - secretRef:
-        #     name: mysql
+        envFrom:
+        - configMapRef:
+           name: mysql
+       - secretRef:
+           name: mysql
 ---
 apiVersion: v1
 kind: Service
