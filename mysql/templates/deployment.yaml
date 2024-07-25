@@ -17,26 +17,28 @@ data:
   MYSQL_USER: ZXhwZW5zZQ==
   MYSQL_PASSWORD: RXhwZW5zZUFwcEAx
 ---
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: mysql
   namespace: expense
-  labels: 
-    app: mysql
+  # these labels are deployment related labels
+  labels:
+    component: mysql
     project: expense
     tier: db
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
-    matchLabels: # these labels are used to find the pods
-      app: mysql
+    matchLabels:
+      component: mysql
       project: expense
       tier: db
+  # pod definition
   template:
     metadata:
-      labels: # these labels are pod labels
-        app: mysql
+      labels:
+        component: mysql
         project: expense
         tier: db
     spec:
@@ -47,7 +49,7 @@ spec:
         envFrom:
         - configMapRef:
            name: mysql
-       -  secretRef:
+        - secretRef:
            name: mysql
 ---
 apiVersion: v1
