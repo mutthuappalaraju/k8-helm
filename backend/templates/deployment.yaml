@@ -1,55 +1,43 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: backend
-  namespace: expense
-data:
-  DB_HOST: mysql
----
-
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: backend
+  name: mysql
   namespace: expense
   # these labels are deployment related labels
   labels:
-    component: backend
+    component: mysql
     project: expense
-    tier: app
+    tier: db
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      component: backend
+      component: mysql
       project: expense
-      tier: app
+      tier: db
   # pod definition
   template:
     metadata:
       labels:
-        component: backend
+        component: mysql
         project: expense
-        tier: app
+        tier: db
     spec:
       containers:
-      - name: backend
-        image: mutthu2512/backend:{{ .Values.deployment.imageVersion }}
-        envFrom:
-        - configMapRef:
-            name: backend
+      - name: mysql
+        image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: mysql
   namespace: expense
 spec:
   selector:
-    component: backend
+    component: mysql
     project: expense
-    tier: app
+    tier: db
   ports:
   - protocol: TCP
-    port: 8080 #service-port
-    targetPort: 8080 #target-port
+    port: 3306 #service-port
+    targetPort: 3306 #target-port
