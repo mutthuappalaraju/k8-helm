@@ -1,3 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+  namespace: expense
+data:
+  MYSQL_DATABASE: "transactions"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql
+  namespace: expense
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: RXhwZW5zZUFwcEAx
+  MYSQL_USER: ZXhwZW5zZQ==
+  MYSQL_PASSWORD: RXhwZW5zZUFwcEAx
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -9,7 +28,7 @@ metadata:
     project: expense
     tier: db
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: {{ .values.deployment.replicas }}
   selector:
     matchLabels:
       component: mysql
@@ -25,7 +44,13 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
+        image: mutthu2512/mysql:{{ .values.deployment.imageVersion }}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: mysql
+        - secretRef:
+            name: mysql
 ---
 apiVersion: v1
 kind: Service
