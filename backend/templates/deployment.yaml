@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: expense
 data:
-  app_HOST: "backend"
+  DB_HOST: mysql
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -34,12 +34,9 @@ spec:
       containers:
       - name: backend
         image: mutthu2512/backend:{{ .Values.deployment.imageVersion }}
-        imagePullPolicy: Always
         envFrom:
         - configMapRef:
-           name: backend
-        
-
+            name: backend
 ---
 apiVersion: v1
 kind: Service
@@ -48,10 +45,10 @@ metadata:
   namespace: expense
 spec:
   selector:
-    app: backend
+    component: backend
     project: expense
     tier: app
   ports:
   - protocol: TCP
     port: 8080 #service-port
-    targetPort: 8080 #container-port
+    targetPort: 8080 #target-port
