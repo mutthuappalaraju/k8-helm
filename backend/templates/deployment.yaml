@@ -28,7 +28,7 @@ metadata:
     project: expense
     tier: db
 spec:
-  replicas: {{ .values.deployment.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
       component: mysql
@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: mutthu2512/mysql:{{ .values.deployment.imageVersion }}
+        image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
