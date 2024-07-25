@@ -1,30 +1,31 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: backend
   namespace: expense
-  labels: # these labels are deployment labels
-    app: backend
+  # these labels are deployment related labels
+  labels:
+    component: backend
     project: expense
     tier: app
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
-    matchLabels: # these labels are used to find the pods
-      app: backend
+    matchLabels:
+      component: backend
       project: expense
       tier: app
+  # pod definition
   template:
     metadata:
-      labels: # these labels are pod labels
-        app: backend
+      labels:
+        component: backend
         project: expense
         tier: app
     spec:
       containers:
       - name: backend
-        image: mutthu2512/backend:{{ .Values.deployment.imageVersion }}
-        imagePullPolicy: Always
+        image: joindevops/backend:{{ .Values.deployment.imageVersion }}
         envFrom:
         - configMapRef:
             name: backend
