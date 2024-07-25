@@ -4,36 +4,36 @@ metadata:
   name: backend
   namespace: expense
 data:
-  DB_HOST: "mysql"
+  app_HOST: "backend"
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: mysql
+  name: backend
   namespace: expense
   # these labels are deployment related labels
   labels:
-    component: mysql
+    component: backend
     project: expense
-    tier: db
+    tier: app
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      component: mysql
+      component: backend
       project: expense
-      tier: db
+      tier: app
   # pod definition
   template:
     metadata:
       labels:
-        component: mysql
+        component: backend
         project: expense
-        tier: db
+        tier: app
     spec:
       containers:
-      - name: mysql
-        image: mutthu2512/mysql:{{ .Values.deployment.imageVersion }}
+      - name: backend
+        image: mutthu2512/backend:{{ .Values.deployment.imageVersion }}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
